@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -104,9 +104,10 @@
 </head>
 <body>
   <div id="videoOverlay">
-    <section class="footer-introduction-video">
-      <script id="ogLLAryldEioM4kpKYmDow" src="https://stream.iranhls.com/Video/Embed/ogLLAryldEioM4kpKYmDow"></script>
-    </section>
+    <video id="introVideo" autoplay muted loop>
+      <source src="../Pargasiran-Azmayeshi1/assets/video/Pargasiran-Landing page (High Bitrate-1080-50fps).mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
     <div id="logo">PARGASIRAN</div>
     <div class="buttons">
       <button id="watchVideoBtn">watch the video</button>
@@ -150,27 +151,698 @@
       videoOverlay.style.display = 'none';
       mainContent.style.display = 'block';
     } else {
-      // Wait for metadata to load before monitoring time
-      introVideo.addEventListener('loadedmetadata', () => {
-        introVideo.play().catch(error => {
-          console.log("Autoplay prevented: ", error);
-        });
-
-        // Monitor video time to transition in the last 12 seconds if not watched
-        introVideo.addEventListener('timeupdate', () => {
-          const duration = introVideo.duration;
-          const currentTime = introVideo.currentTime;
-          if (duration && !isNaN(duration) && !isWatchClicked && duration - currentTime <= 12) {
-            videoOverlay.style.opacity = '0';
-            setTimeout(() => {
-              videoOverlay.style.display = 'none';
-              mainContent.style.display = 'block';
-              introVideo.pause(); // Pause video on transition
-              introVideo.muted = true; // Mute video on transition
-            }, 500); // Match the transition duration
-          }
-        });
+      introVideo.play().catch(error => {
+        console.log("Autoplay prevented: ", error);
       });
+
+      // Monitor video time to transition in the last 12 seconds if not watched
+      introVideo.addEventListener('timeupdate', () => {
+        const duration = introVideo.duration;
+        const currentTime = introVideo.currentTime;
+        if (duration && !isWatchClicked && duration - currentTime <= 12) {
+          videoOverlay.style.opacity = '0';
+          setTimeout(() => {
+            videoOverlay.style.display = 'none';
+            mainContent.style.display = 'block';
+            introVideo.pause(); // Pause video on transition
+            introVideo.muted = true; // Mute video on transition
+          }, 500); // Match the transition duration
+        }
+      });
+
+      watchVideoBtn.addEventListener('click', () => {
+        isWatchClicked = true;
+        introVideo.muted = false;
+        logo.style.opacity = '0';
+        buttons.style.opacity = '0';
+        setTimeout(() => {
+          logo.style.display = 'none';
+          buttons.style.display = 'none';
+          closeBtn.classList.add('visible');
+        }, 500);
+      });
+
+      skipBtn.addEventListener('click', () => {
+        videoOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        setCookie('videoShown', 'true', 1);
+        introVideo.pause();
+        introVideo.muted = true;
+      });
+
+      closeBtn.addEventListener('click', () => {
+        videoOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        introVideo.pause();
+        introVideo.muted = true;
+      });
+    }
+  </script>
+</body>
+</html> -->
+
+
+<!-- بالایی باید حذف شه چون ویدیو رو از دایرکتوری انتخواب کرده12 ثانیه آخرش -->
+
+
+<!-- GK.com -->
+
+
+<!-- کد پایین باید تزریق بشه به فایل اصلی -->
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pargasiran</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      font-size: 62.5%;
+    }
+    #videoOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      background: #000;
+      transition: opacity 0.5s ease;
+    }
+    #introVideo {
+      filter: brightness(75%);
+    }
+    #logo {
+      font-weight: bold;
+      font-size: 10rem;
+      color: white;
+      text-align: center;
+      transition: opacity 0.5s ease;
+    }
+    .intro-logo-container {
+      max-width: 65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .intro-logo-text {
+      width: 100%;
+    }
+    .intro-logo-star {
+      width: 25%;
+    }
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    .buttons {
+      margin: 5.5rem auto;
+      display: flex;
+      gap: 5.5rem;
+      transition: opacity 0.5s ease;
+    }
+    button {
+      padding: 1.2rem;
+      cursor: pointer;
+      color: white;
+    }
+    #watchVideoBtn {
+      background: transparent;
+      border: 0.2rem solid #fff;
+      font-size: 1.8rem;
+      width: 25rem;
+    }
+    #skipBtn {
+      width: 25rem;
+      background: transparent;
+      border: 0.2rem solid #fff;
+      font-size: 1.8rem;
+    }
+    #closeBtn {
+      position: absolute;
+      top: 4rem;
+      right: 4rem;
+      font-size: 3rem;
+      color: white;
+      background: none;
+      border: none;
+      border-radius: 0;
+      width: auto;
+      height: auto;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #closeBtn span {
+      font-size: 3rem;
+      font-weight: normal;
+      padding-bottom: 0.4rem;
+    }
+    #closeBtn.visible {
+      opacity: 1;
+    }
+    #mainContent {
+      padding: 20px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="videoOverlay">
+    <video id="introVideo" autoplay muted loop>
+      <source src="../Pargasiran-Azmayeshi1/assets/video/Pargasiran-Landing page (High Bitrate-1080-50fps).mp4" type="video/mp4" />
+      Your browser does not support the video.
+    </video>
+    <div class="intro-logo-container" id="logo">
+      <img src="../Pargasiran-Azmayeshi1/assets/images/compresed/pargasiran.webp" class="intro-logo-text">
+      <img src="../Pargasiran-Azmayeshi1/assets/images/compresed/pargasStar.webp" class="intro-logo-star">
+    </div>
+    <div class="buttons">
+      <button id="watchVideoBtn" class="btn-hovr">watch the video</button>
+      <button id="skipBtn" class="btn-hovr">skip</button>
+    </div>
+    <button id="closeBtn"><span>close</span>×</button>
+  </div>
+
+  <div id="mainContent">
+    <h1>Welcome to Pargasiran</h1>
+    <p>Explore our industrial solutions and services.</p>
+  </div>
+
+  <script>
+    const videoOverlay = document.getElementById('videoOverlay');
+    const introVideo = document.getElementById('introVideo');
+    const watchVideoBtn = document.getElementById('watchVideoBtn');
+    const skipBtn = document.getElementById('skipBtn');
+    const logo = document.getElementById('logo');
+    const buttons = document.querySelector('.buttons');
+    const closeBtn = document.getElementById('closeBtn');
+    const mainContent = document.getElementById('mainContent');
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+    }
+
+    const videoShown = getCookie('videoShown');
+    if (videoShown) {
+      videoOverlay.style.display = 'none';
+      mainContent.style.display = 'block';
+    } else {
+      introVideo.play().catch(error => {
+        console.log("Autoplay prevented: ", error);
+      });
+
+      watchVideoBtn.addEventListener('click', () => {
+        introVideo.muted = false;
+        logo.style.opacity = '0';
+        buttons.style.opacity = '0';
+        setTimeout(() => {
+          logo.style.display = 'none';
+          buttons.style.display = 'none';
+          closeBtn.classList.add('visible');
+        }, 500);
+      });
+
+      skipBtn.addEventListener('click', () => {
+        videoOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        setCookie('videoShown', 'true', 1);
+        introVideo.pause();
+        introVideo.muted = true;
+      });
+
+      closeBtn.addEventListener('click', () => {
+        videoOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        introVideo.pause();
+        introVideo.muted = true;
+      });
+    }
+  </script>
+</body>
+</html> -->
+
+<!-- بالایی بدون تایمره -->
+
+
+
+
+<!-- پایینی با تایمره 57 ثانیه‌ای -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pargasiran</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      font-size: 62.5%;
+    }
+    #videoOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      background: #000;
+      transition: opacity 0.5s ease;
+    }
+    #introVideo {
+      filter: brightness(75%);
+    }
+    #logo {
+      font-weight: bold;
+      font-size: 10rem;
+      color: white;
+      text-align: center;
+      transition: opacity 0.5s ease;
+    }
+    .intro-logo-container {
+      max-width: 65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .intro-logo-text {
+      width: 100%;
+    }
+    .intro-logo-star {
+      width: 25%;
+    }
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    .buttons {
+      margin: 5.5rem auto;
+      display: flex;
+      gap: 5.5rem;
+      transition: opacity 0.5s ease;
+    }
+    button {
+      padding: 1.2rem;
+      cursor: pointer;
+      color: white;
+    }
+    #watchVideoBtn {
+      background: transparent;
+      border: 0.2rem solid #fff;
+      font-size: 1.8rem;
+      width: 25rem;
+    }
+    #skipBtn {
+      width: 25rem;
+      background: transparent;
+      border: 0.2rem solid #fff;
+      font-size: 1.8rem;
+    }
+    #closeBtn {
+      position: absolute;
+      top: 4rem;
+      right: 4rem;
+      font-size: 3rem;
+      color: white;
+      background: none;
+      border: none;
+      border-radius: 0;
+      width: auto;
+      height: auto;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #closeBtn span {
+      font-size: 3rem;
+      font-weight: normal;
+      padding-bottom: 0.4rem;
+    }
+    #closeBtn.visible {
+      opacity: 1;
+    }
+    #mainContent {
+      padding: 20px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="videoOverlay">
+    <video id="introVideo" autoplay muted loop>
+      <source src="../Pargasiran-Azmayeshi1/assets/video/Pargasiran-Landing page (High Bitrate-1080-50fps).mp4" type="video/mp4" />
+      Your browser does not support the video.
+    </video>
+    <div class="intro-logo-container" id="logo">
+      <img src="../Pargasiran-Azmayeshi1/assets/images/compresed/pargasiran.webp" class="intro-logo-text">
+      <img src="../Pargasiran-Azmayeshi1/assets/images/compresed/pargasStar.webp" class="intro-logo-star">
+    </div>
+    <div class="buttons">
+      <button id="watchVideoBtn" class="btn-hovr">watch the video</button>
+      <button id="skipBtn" class="btn-hovr">skip</button>
+    </div>
+    <button id="closeBtn"><span>close</span>×</button>
+  </div>
+
+  <div id="mainContent">
+    <h1>Welcome to Pargasiran</h1>
+    <p>Explore our industrial solutions and services.</p>
+  </div>
+
+  <script>
+    const videoOverlay = document.getElementById('videoOverlay');
+    const introVideo = document.getElementById('introVideo');
+    const watchVideoBtn = document.getElementById('watchVideoBtn');
+    const skipBtn = document.getElementById('skipBtn');
+    const logo = document.getElementById('logo');
+    const buttons = document.querySelector('.buttons');
+    const closeBtn = document.getElementById('closeBtn');
+    const mainContent = document.getElementById('mainContent');
+
+    let isWatchClicked = false;
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+    }
+
+    const videoShown = getCookie('videoShown');
+    if (videoShown) {
+      videoOverlay.style.display = 'none';
+      mainContent.style.display = 'block';
+    } else {
+      introVideo.play().catch(error => {
+        console.log("Autoplay prevented: ", error);
+      });
+
+      // Automatic transition after 57 seconds if not watched
+      setTimeout(() => {
+        if (!isWatchClicked) {
+          videoOverlay.style.opacity = '0';
+          setTimeout(() => {
+            videoOverlay.style.display = 'none';
+            mainContent.style.display = 'block';
+            introVideo.pause(); // Pause video on transition
+            introVideo.muted = true; // Mute video on transition
+          }, 500); // Match the transition duration
+        }
+      }, 57000); // 57 seconds in milliseconds
+
+      watchVideoBtn.addEventListener('click', () => {
+        isWatchClicked = true;
+        introVideo.muted = false;
+        logo.style.opacity = '0';
+        buttons.style.opacity = '0';
+        setTimeout(() => {
+          logo.style.display = 'none';
+          buttons.style.display = 'none';
+          closeBtn.classList.add('visible');
+        }, 500);
+      });
+
+      skipBtn.addEventListener('click', () => {
+        videoOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        setCookie('videoShown', 'true', 1);
+        introVideo.pause(); // Pause video on skip
+        introVideo.muted = true; // Mute video on skip
+      });
+
+      closeBtn.addEventListener('click', () => {
+        videoOverlay.style.display = 'none';
+        mainContent.style.display = 'block';
+        introVideo.pause(); // Pause video on close
+        introVideo.muted = true; // Mute video on close
+      });
+    }
+  </script>
+</body>
+</html> -->
+
+
+
+
+<!--  -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pargasiran</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      font-size: 62.5%;
+    }
+    #videoOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      background: #000;
+      transition: opacity 0.5s ease;
+    }
+    #introVideo {
+      filter: brightness(75%);
+    }
+    #logo {
+      font-weight: bold;
+      font-size: 10rem;
+      color: white;
+      text-align: center;
+      transition: opacity 0.5s ease;
+    }
+    .intro-logo-container {
+      max-width: 65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .intro-logo-text {
+      width: 100%;
+    }
+    .intro-logo-star {
+      width: 25%;
+    }
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    .buttons {
+      margin: 5.5rem auto;
+      display: flex;
+      gap: 5.5rem;
+      transition: opacity 0.5s ease;
+    }
+    button {
+      padding: 1.2rem;
+      cursor: pointer;
+      color: white;
+    }
+    #watchVideoBtn {
+      background: transparent;
+      border: 0.2rem solid #fff;
+      font-size: 1.8rem;
+      width: 25rem;
+    }
+    #skipBtn {
+      width: 25rem;
+      background: transparent;
+      border: 0.2rem solid #fff;
+      font-size: 1.8rem;
+    }
+    #closeBtn {
+      position: absolute;
+      top: 4rem;
+      right: 4rem;
+      font-size: 3rem;
+      color: white;
+      background: none;
+      border: none;
+      border-radius: 0;
+      width: auto;
+      height: auto;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #closeBtn span {
+      font-size: 3rem;
+      font-weight: normal;
+      padding-bottom: 0.4rem;
+    }
+    #closeBtn.visible {
+      opacity: 1;
+    }
+    #mainContent {
+      padding: 20px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="videoOverlay">
+    <video id="introVideo" autoplay muted loop>
+      <!-- <source src="../Pargasiran-Azmayeshi1/assets/video/Pargasiran-Landing page (High Bitrate-1080-50fps).mp4" type="video/mp4" /> -->
+       <source src="https://stream.iranhls.com/Video/Play/189932/XpeE3gy3CES58cQEKDL4aQ"/>
+      Your browser does not support the video.
+    </video>
+    <div class="intro-logo-container" id="logo">
+      <img src="../Pargasiran-Azmayeshi1/assets/images/compresed/pargasiran.webp" class="intro-logo-text">
+      <img src="../Pargasiran-Azmayeshi1/assets/images/compresed/pargasStar.webp" class="intro-logo-star">
+    </div>
+    <div class="buttons">
+      <button id="watchVideoBtn" class="btn-hovr">watch the video</button>
+      <button id="skipBtn" class="btn-hovr">skip</button>
+    </div>
+    <button id="closeBtn"><span>close</span>×</button>
+  </div>
+
+  <div id="mainContent">
+    <h1>Welcome to Pargasiran</h1>
+    <p>Explore our industrial solutions and services.</p>
+  </div>
+
+  <script>
+    const videoOverlay = document.getElementById('videoOverlay');
+    const introVideo = document.getElementById('introVideo');
+    const watchVideoBtn = document.getElementById('watchVideoBtn');
+    const skipBtn = document.getElementById('skipBtn');
+    const logo = document.getElementById('logo');
+    const buttons = document.querySelector('.buttons');
+    const closeBtn = document.getElementById('closeBtn');
+    const mainContent = document.getElementById('mainContent');
+
+    let isWatchClicked = false;
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+    }
+
+    const videoShown = getCookie('videoShown');
+    if (videoShown) {
+      videoOverlay.style.display = 'none';
+      mainContent.style.display = 'block';
+    } else {
+      introVideo.play().catch(error => {
+        console.log("Autoplay prevented: ", error);
+      });
+
+      // Simulate "watch the video" action after 57 seconds if not clicked
+      setTimeout(() => {
+        if (!isWatchClicked) {
+          logo.style.opacity = '0';
+          buttons.style.opacity = '0';
+          setTimeout(() => {
+            logo.style.display = 'none';
+            buttons.style.display = 'none';
+            closeBtn.style.display = 'none'; // Hide close button
+          }, 500); // Match the transition duration
+        }
+      }, 57000); // 57 seconds in milliseconds
+
+      // Transition to main content after 69 seconds
+      setTimeout(() => {
+        if (!isWatchClicked) {
+          videoOverlay.style.opacity = '0';
+          setTimeout(() => {
+            videoOverlay.style.display = 'none';
+            mainContent.style.display = 'block';
+            introVideo.pause(); // Pause video on transition
+            introVideo.muted = true; // Ensure muted on transition
+          }, 500); // Match the transition duration
+        }
+      }, 69000); // 69 seconds in milliseconds
 
       watchVideoBtn.addEventListener('click', () => {
         isWatchClicked = true;
